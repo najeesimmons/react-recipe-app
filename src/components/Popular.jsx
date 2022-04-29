@@ -1,14 +1,16 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import { Splide, SplideSlide } from '@splidejs/react-splide';
+import '@splidejs/splide/dist/css/splide.min.css';
 
 function Popular() {
-
-   const [popular, setPopular] = useState([]); 
-  // useEffect will run the getPopular function as soon as  component is mounted  
+  const [popular, setPopular] = useState([]);
+  // useEffect will run the getPopular function as soon as  component is mounted
 
   useEffect(() => {
-      getPopular();
-  // in square brackets below, a condition can be added which re-triggers useEffect/
-  // getPopular    
+    getPopular();
+    // in square brackets below, a condition can be added which re-triggers useEffect/
+    // getPopular
   }, []);
 
   const getPopular = async () => {
@@ -16,18 +18,43 @@ function Popular() {
       `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=9`
     );
     const data = await api.json();
-    setPopular(data.recipes)
+    setPopular(data.recipes);
   };
 
-  return <div>
-      {popular.map(recipe => {
-          return (
-              <div key={recipe.id}>
-                  {recipe.title}
-            </div>
-          )
-      })}
-  </div>;
+  return (
+    <div>
+        <Wrapper>
+        <h3>Popular Picks</h3>
+        <Splide>
+        {popular.map((recipe) => {
+            return(
+                    <SplideSlide>
+                        <Card>
+                            <p>{recipe.title}</p>
+                            <img src={recipe.image} alt={recipe.title} />
+                        </Card>
+                    </SplideSlide>    
+            );
+        })}
+        </Splide>       
+        </Wrapper>        
+    </div>
+  )
 }
+
+
+const Wrapper = styled.div`
+    margin: 4rem 0rem;
+`;
+
+const Card = styled.div`
+    min-height: 25rem;
+    border-radius: 2rem;
+    overflow: hidden;
+
+    img{
+        border-radius: 2rem;
+    }
+`;
 
 export default Popular;
