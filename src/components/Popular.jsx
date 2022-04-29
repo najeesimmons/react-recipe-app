@@ -5,8 +5,8 @@ import '@splidejs/splide/dist/css/splide.min.css';
 
 function Popular() {
   const [popular, setPopular] = useState([]);
+  
   // useEffect will run the getPopular function as soon as  component is mounted
-
   useEffect(() => {
     getPopular();
     // in square brackets below, a condition can be added which re-triggers useEffect/
@@ -18,6 +18,7 @@ function Popular() {
       `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=9`
     );
     const data = await api.json();
+    console.log(data)
     setPopular(data.recipes);
   };
 
@@ -25,10 +26,15 @@ function Popular() {
     <div>
         <Wrapper>
         <h3>Popular Picks</h3>
-        <Splide>
+        <Splide options={{
+            perPage: 3,
+            arrows: false,
+            pagination: false,
+            drag:'free',
+            gap: '5rem'}}>
         {popular.map((recipe) => {
             return(
-                    <SplideSlide>
+                    <SplideSlide key={recipe.id}>
                         <Card>
                             <p>{recipe.title}</p>
                             <img src={recipe.image} alt={recipe.title} />
